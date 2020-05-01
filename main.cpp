@@ -43,6 +43,8 @@ Make a pull request after you make your first commit and pin the pull request li
 send me a DM to check your pull request
 
  Wait for my code review.
+
+ Apr 4th - Give me 5 member variables and 3 member functions per UDT
  */
 
 #include <iostream>
@@ -53,7 +55,11 @@ send me a DM to check your pull request
  */
 struct FloatType
 {
+    bool b;
+    char c;
+    int i;
     float f;
+    double d;
     
     FloatType();
     ~FloatType();
@@ -72,6 +78,10 @@ struct FloatType
  */
 struct DoubleType
 {
+    bool b;
+    char c;
+    int i;
+    float f;
     double d;
     
     DoubleType();
@@ -91,7 +101,11 @@ struct DoubleType
  */
 struct IntType
 {
+    bool b;
+    char c;
     int i;
+    float f;
+    double d;
     
     IntType();
     ~IntType();
@@ -114,10 +128,15 @@ struct Stars
     FloatType ft;
     DoubleType dt;
 
+    int x;
+    float y;
+
     Stars();
     ~Stars();
 
     void doStuff();
+    int get10x();
+    float get10y();
 };
 
 /*
@@ -129,10 +148,15 @@ struct Stripes
     FloatType ft;
     DoubleType dt;
 
+    int x;
+    float y;
+
     Stripes();
     ~Stripes();
 
     void doStuff();    
+    int get10x();
+    float get10y();
 };
 
 
@@ -140,8 +164,12 @@ struct Stripes
 
 FloatType::FloatType()
 {
-    this->f = 0.0f;
-    std::cout << "FloatType ctor" << std::endl;
+    f = 9.5f;
+    b = true;
+    c = 'c';
+    d = 123.456;
+    i = 99;
+    std::cout << "FloatType ctor" << " f: " << f << " b: " << b << " c: " << c << " d: " << d << " i: " << i << std::endl;
 }
 FloatType::~FloatType()
 {
@@ -153,8 +181,8 @@ void FloatType::doWhile()
     int count = 0;
     while(count < 3)
     {
-        this->f = this->add(this->f,count);
-        std::cout << "FloatType doWhile " << this->f << std::endl;
+        f = add(f,1.0);
+        std::cout << "FloatType doWhile " << f << std::endl;
         count++;
     }
 }
@@ -163,8 +191,8 @@ void FloatType::doFor()
 {
     for(int count = 0; count < 3; count++)
     {
-        this->f = this->add(this->f,count);
-        std::cout << "FloatType doFor " << this->f << std::endl;
+        f = add(f,2.0);
+        std::cout << "FloatType doFor " << f << std::endl;
     }
 }
 
@@ -195,8 +223,12 @@ float FloatType::divide( float lhs, float rhs )
 
 DoubleType::DoubleType()
 {
-    this->d = 0.0;
-    std::cout << "DoubleType ctor" << std::endl;
+    f = 9.5f;
+    b = true;
+    c = 'c';
+    d = 123.456;
+    i = 99;
+    std::cout << "DoubleType ctor" << " f: " << f << " b: " << b << " c: " << c << " d: " << d << " i: " << i << std::endl;
 }
 DoubleType::~DoubleType()
 {
@@ -208,8 +240,8 @@ void DoubleType::doWhile()
     int count = 0;
     while(count < 3)
     {
-        this->d = this->add(this->d,count);
-        std::cout << "DoubleType doWhile " << this->d << std::endl;
+        d = add(d,6.0);
+        std::cout << "DoubleType doWhile " << d << std::endl;
         count++;
     }
 }
@@ -218,8 +250,8 @@ void DoubleType::doFor()
 {
     for(int count = 0; count < 3; count++)
     {
-        this->d = this->add(this->d,count);
-        std::cout << "DoubleType doFor " << this->d << std::endl;
+        d = add(d,4.5);
+        std::cout << "DoubleType doFor " << d << std::endl;
     }
 }
 
@@ -250,8 +282,12 @@ double DoubleType::divide( double lhs, double rhs )
 
 IntType::IntType()
 {
-    this->i = 0.0;
-    std::cout << "IntType ctor" << std::endl;
+    f = 9.5f;
+    b = true;
+    c = 'c';
+    d = 123.456;
+    i = 99;
+    std::cout << "IntType ctor" << " f: " << f << " b: " << b << " c: " << c << " d: " << d << " i: " << i << std::endl;
 }
 IntType::~IntType()
 {
@@ -262,9 +298,9 @@ void IntType::doWhile()
 {
     int count = 0;
     while(count < 3)
-    {
-        this->i = this->add(this->i,count);        
-        std::cout << "IntType doWhile " << this->i << std::endl;
+    {     
+        i = add(i,count);
+        std::cout << "IntType doWhile " << i << std::endl;
         count++;
     }
 }
@@ -273,8 +309,8 @@ void IntType::doFor()
 {
     for(int count = 0; count < 3; count++)
     {
-        this->i = this->add(this->i,count);
-        std::cout << "IntType doFor " << this->i << std::endl;
+        i = add(i,count);
+        std::cout << "IntType doFor " << i << std::endl;
     }
 }
 
@@ -309,6 +345,7 @@ int IntType::divide( int lhs, int rhs )
 Stars::Stars()
 {
     std::cout << "Stars ctor" << std::endl;
+    
 }
 
 Stars::~Stars()
@@ -319,11 +356,20 @@ Stars::~Stars()
 void Stars::doStuff()
 {
     std::cout << "Stars doStuff" << std::endl;
-    this->ft.doWhile();
-    this->dt.doFor();
-    this->it.doWhile();
-
+    ft.doWhile();
+    dt.doFor();
+    it.doWhile();
 } 
+
+int Stars::get10x()
+{
+    return it.multiply(10, x);
+}
+
+float Stars::get10y()
+{
+    return ft.multiply(10, y);
+}
 
 Stripes::Stripes()
 {
@@ -334,42 +380,43 @@ Stripes::~Stripes()
 {
     std::cout << "Stripes dtor" << std::endl;
 }
+
 void Stripes::doStuff()
 {
-    auto resultFT = this->ft.add(3.2f, 23.f );       
+    auto resultFT = ft.add(3.2f, 23.f );       
     std::cout << "result of ft.add(): " << resultFT << std::endl;
 
-    resultFT = this->ft.subtract(3.2f, 23.f );
+    resultFT = ft.subtract(3.2f, 23.f );
     std::cout << "result of ft.subtract(): " << resultFT << std::endl;
 
-    resultFT = this->ft.multiply(3.2f, 23.f );        
+    resultFT = ft.multiply(3.2f, 23.f );        
     std::cout << "result of ft.multiply(): " << resultFT << std::endl;
 
-    resultFT = this->ft.divide(3.2f, 23.f );     
+    resultFT = ft.divide(3.2f, 23.f );     
     std::cout << "result of ft.divide(): " << resultFT << std::endl;
 
-    auto resultDT = this->dt.add(3.2, 23. );       
+    auto resultDT = dt.add(3.2, 23. );       
     std::cout << "result of dt.add(): " << resultDT << std::endl;
 
-    resultDT = this->dt.subtract(3.2, 23. );
+    resultDT = dt.subtract(3.2, 23. );
     std::cout << "result of dt.subtract(): " << resultDT << std::endl;
 
-    resultDT = this->dt.multiply(3.2, 23. );        
+    resultDT = dt.multiply(3.2, 23. );        
     std::cout << "result of dt.multiply(): " << resultDT << std::endl;
 
-    resultDT = this->dt.divide(3.2, 23. );     
+    resultDT = dt.divide(3.2, 23. );     
     std::cout << "result of dt.divide(): " << resultDT << std::endl;
 
-    auto resultIT = this->it.add(3, 23 );       
+    auto resultIT = it.add(3, 23 );       
     std::cout << "result of it.add(): " << resultIT << std::endl;
 
-    resultIT = this->it.subtract(3, 23 );
+    resultIT = it.subtract(3, 23 );
     std::cout << "result of it.subtract(): " << resultIT << std::endl;
 
-    resultIT = this->it.multiply(3, 23 );        
+    resultIT = it.multiply(3, 23 );        
     std::cout << "result of it.multiply(): " << resultIT << std::endl;
 
-    resultIT = this->it.divide(3, 23 );     
+    resultIT = it.divide(3, 23 );     
     std::cout << "result of it.divide(): " << resultIT << std::endl;
 }
 
