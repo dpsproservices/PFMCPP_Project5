@@ -56,7 +56,8 @@ struct Note
 {
     int stringNum;
     int fretNum;
-    Finger finger; 
+    Finger finger;
+    Key key; 
     
     Note();
     Note(int str, int fret, Finger digit);
@@ -70,6 +71,12 @@ struct Note
     void setFretNum(int fret);
     Finger getFinger();
     void setFinger(Finger finger);
+    Key getKey();
+    void setKey(Key key);
+
+    Key getNextSemitone();
+    Key getKeyByInternal(int interval);
+    void printCycle(int interval);
 
     char getTab();
 };
@@ -125,6 +132,81 @@ void Note::setFinger(Finger digit)
     finger = digit;
 }
 
+void Note::setKey(Key k)
+{
+    key = k;
+}
+
+Key Note::getKey()
+{
+    return key;
+}
+
+Key Note::getNextSemitone()
+{
+    switch(key)
+    {
+        case A:
+            return Bb;
+        case Bb: 
+            return B;
+        case B:
+            return C;
+        case C:
+            return Db;
+        case Db:
+            return D;
+        case D:
+            return Eb;
+        case Eb:
+            return E;
+        case E:
+            return F;
+        case F:
+            return Gb;
+        case Gb:
+            return G;
+        case G:
+            return Ab;
+        case Ab:
+            return A;
+    }
+}
+
+Key Note::getKeyByInternal(int interval)
+{
+    Key semitone = key;
+
+    if(interval == 0)
+    {
+        return semitone;
+    }
+
+    if(interval < 0)
+    {
+        interval = 12 + interval;
+    }
+
+    int i = 0;
+    while(i < interval)
+    {
+        semitone = getNextSemitone(semitone);
+        i++;
+    }
+
+    return semitone;
+}
+
+void Note::printCycle(int interval)
+{
+    Key semitone = key;
+    for (int i = 1; i <= NUM_KEYS; i++)
+    {
+        std::cout << semitone << std::endl;
+        semitone = getKeyByInternal(interval);
+    }
+}
+
 char Note::getTab()
 {
     switch (finger)
@@ -141,8 +223,6 @@ char Note::getTab()
             return '4';
         case none:
             return '-';
-        //default:
-            //return '-';
     }
 }
 
