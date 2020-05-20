@@ -44,29 +44,463 @@ send me a DM to check your pull request
 
  Wait for my code review.
  */
-
-/*
- copied UDT 1:
- */
-
-/*
- copied UDT 2:
- */
-
-/*
- copied UDT 3:
- */
-
-/*
- new UDT 4:
- */
-
-/*
- new UDT 5:
- */
-
+#define NUM_STRINGS 6
+#define NUM_FRETS 24
+//#define NUM_KEYS 12
 #include <iostream>
+
+enum Finger { thumb, index, middle, ring, pinky, none };
+enum Key { A, Bb, B, C, Db, D, Eb, E, F, Gb, G, Ab };
+
+struct Note
+{
+    int stringNum;
+    int fretNum;
+    Finger finger; 
+    
+    Note();
+    Note(int str, int fret, Finger digit);
+    ~Note();
+
+    // Note operator=(const Note & n);
+
+    int getStringNum();
+    void setStringNum(int stringNum);
+    int getFretNum();
+    void setFretNum(int fret);
+    Finger getFinger();
+    void setFinger(Finger finger);
+
+    char getTab();
+};
+
+Note::Note()
+{
+    stringNum = 1;
+    fretNum = 0;
+    finger = none;
+    std::cout << "Note default CTOR" << std::endl; 
+}
+
+Note::Note(int str, int fret, Finger digit)
+{
+    stringNum = str;
+    fretNum = fret;
+    finger = digit;
+    std::cout << "Note CTOR" << std::endl;
+}
+
+Note::~Note()
+{
+    std::cout << "Note DTOR" << std::endl;
+}
+
+int Note::getStringNum()
+{
+    return stringNum;
+}
+
+void Note::setStringNum(int strNum)
+{
+    stringNum = strNum;
+}
+
+int Note::getFretNum()
+{
+    return fretNum;
+}
+
+void Note::setFretNum(int fret)
+{
+    fretNum = fret;
+}
+
+Finger Note::getFinger()
+{
+    return finger;
+}
+
+void Note::setFinger(Finger digit)
+{
+    finger = digit;
+}
+
+char Note::getTab()
+{
+    switch (finger)
+    {
+        case thumb:
+            return 'T';
+        case index:
+            return '1';
+        case middle:
+            return '2';
+        case ring:
+            return '3';
+        case pinky:
+            return '4';
+        case none:
+            return '-';
+        //default:
+            //return '-';
+    }
+}
+
+struct GuitarString
+{
+    int stringNum;
+    int numFrets;
+    Key openStringKey;
+    Key frettedKey;
+
+    int frettedNum;
+
+    Note note;
+
+    GuitarString(int stringNum);
+    ~GuitarString();
+
+    int getStringNum();
+    void setStringNum(int stringNum);
+
+    int getNumFrets();
+    Key getOpenStringKey();
+
+    void setFrettedKey(Key key);
+    Key getFrettedKey();
+
+    Key getOpenStringKey(int stringNum);
+
+    int getFrettedNum();
+    void setFrettedNum(int fretNum);
+
+    //Note getNote();
+    void setNote(Note note);
+
+    void printGuitarString();
+};
+
+Key GuitarString::getOpenStringKey(int strNum)
+{
+    switch (strNum)
+    {
+        case 1:
+            return E;
+        case 2:
+            return B;
+        case 3:
+            return G;
+        case 4:
+            return D;
+        case 5:
+            return A;
+        case 6:
+            return E;
+        default:
+            return E;
+    }
+}
+
+GuitarString::GuitarString(int strNum)
+{
+    std::cout << "GuitarString CTOR" << std::endl;
+    numFrets = NUM_FRETS;
+    stringNum = strNum;
+    openStringKey = getOpenStringKey(strNum);
+    frettedKey = openStringKey;
+    frettedNum = 0;
+    note.setStringNum(strNum);
+    note.setFretNum(frettedNum);
+    note.setFinger(none);
+}
+
+GuitarString::~GuitarString()
+{
+    std::cout << "GuitarString DTOR" << std::endl;
+}
+
+int GuitarString::getStringNum()
+{
+    return stringNum;
+}
+
+void GuitarString::setStringNum(int strNum)
+{
+    stringNum = strNum;
+}
+
+int GuitarString::getNumFrets()
+{
+    return numFrets;
+}
+
+Key GuitarString::getOpenStringKey()
+{
+    return openStringKey;
+}
+
+void GuitarString::setFrettedKey(Key key)
+{
+    frettedKey = key;
+}
+
+Key GuitarString::getFrettedKey()
+{
+    return frettedKey;
+}
+
+int GuitarString::getFrettedNum()
+{
+    return frettedNum;
+}
+
+void GuitarString::setFrettedNum(int fretNum)
+{
+    frettedNum = fretNum;
+}
+
+//Note GuitarString::getNote()
+//{
+//    return note;
+//}
+
+void GuitarString::setNote(Note n)
+{
+    note.setStringNum(n.getStringNum());
+    note.setFretNum(n.getFretNum());
+    note.setFinger(n.getFinger());
+}
+
+void GuitarString::printGuitarString()
+{
+
+    std::cout << stringNum << " " << openStringKey << " |";
+
+    for(int fret = 1; fret <= NUM_FRETS; fret++)
+    {
+        if(fret == getFrettedNum())
+        {
+            std::cout << note.getTab();
+        }
+        else 
+        {
+            std::cout << "-";
+        }
+    }
+
+    std::cout << std::endl;
+}
+
+
+struct Chord
+{
+    int numNotes;
+    int numFingers;
+
+    Key key;
+    Note notes[NUM_STRINGS];
+
+    Chord();
+    ~Chord();
+
+    // Chord operator=(const Chord & c);
+
+    int getNumNotes();
+    void setNumNotes(int num);
+    int getNumFingers();
+    void setNumFingers(int digits);
+
+    Key getKey();
+    void setKey(Key k);
+
+    void setNote(Note note);
+    void resetChord();
+
+
+};
+
+Chord::Chord()
+{
+    std::cout << "Chord CTOR" << std::endl;
+    notes[0].setStringNum(1); 
+    notes[0].setFretNum(0);
+    notes[0].setFinger(none);
+    notes[1].setStringNum(2); 
+    notes[1].setFretNum(0);
+    notes[1].setFinger(none);
+    notes[2].setStringNum(3); 
+    notes[2].setFretNum(0);
+    notes[2].setFinger(none);
+    notes[3].setStringNum(4); 
+    notes[3].setFretNum(0);
+    notes[3].setFinger(none);
+    notes[4].setStringNum(5); 
+    notes[4].setFretNum(0);
+    notes[4].setFinger(none);
+    notes[5].setStringNum(6); 
+    notes[5].setFretNum(0);
+    notes[5].setFinger(none);
+}
+
+Chord::~Chord()
+{
+    std::cout << "Chord DTOR" << std::endl;
+}
+
+int Chord::getNumNotes()
+{
+    return numNotes;
+}
+
+void Chord::setNumNotes(int num)
+{   
+    numNotes = num;
+}
+
+int Chord::getNumFingers()
+{
+    return numFingers;
+}
+
+void Chord::setNumFingers(int digits)
+{
+    numFingers = digits;
+}
+
+
+Key Chord::getKey()
+{
+    return key;
+}
+
+void Chord::setKey(Key k)
+{
+    key = k;
+}
+
+void Chord::setNote(Note note)
+{
+    int s = note.getStringNum();
+    int i = s - 1;
+    Finger f = note.getFinger();
+    notes[i].setStringNum(s); 
+    notes[i].setFretNum(0);
+    notes[i].setFinger(f);
+}
+
+void Chord::resetChord()
+{
+    notes[0].setStringNum(1); 
+    notes[0].setFretNum(0);
+    notes[0].setFinger(none);
+    notes[1].setStringNum(2); 
+    notes[1].setFretNum(0);
+    notes[1].setFinger(none);
+    notes[2].setStringNum(3); 
+    notes[2].setFretNum(0);
+    notes[2].setFinger(none);
+    notes[3].setStringNum(4); 
+    notes[3].setFretNum(0);
+    notes[3].setFinger(none);
+    notes[4].setStringNum(5); 
+    notes[4].setFretNum(0);
+    notes[4].setFinger(none);
+    notes[5].setStringNum(6); 
+    notes[5].setFretNum(0);
+    notes[5].setFinger(none);
+}
+
+struct Fretboard
+{
+    int frets;
+    int numStrings;    
+    int numNotesFretted;
+    int octave;
+    Chord chord;
+
+    Fretboard();
+    ~Fretboard();
+
+    void setChord(Chord c);
+    void removeChord();
+
+    void changeOctave(int oct);
+
+    void printTab();
+    void reset();
+};
+
+Fretboard::Fretboard()
+{
+    numStrings = NUM_STRINGS;
+    frets = NUM_FRETS;
+    numNotesFretted = 0;
+    octave = 1;
+
+    chord.resetChord();
+
+    std::cout << "Fretboard CTOR" << std::endl;
+}
+
+Fretboard::~Fretboard()
+{
+    std::cout << "Fretboard DTOR" << std::endl;
+}
+
+void Fretboard::setChord(Chord c)
+{
+    chord.setKey(c.getKey());
+    chord.setNumNotes(c.getNumNotes());
+    chord.setNumFingers(c.getNumFingers());
+}
+
+void Fretboard::reset()
+{
+    chord.resetChord();
+}
+
+void Fretboard::changeOctave(int oct)
+{
+    octave = oct;
+}
+
+void Fretboard::printTab()
+{
+    for(int s = 1; s <= numStrings; s++)
+    {
+
+    }
+}
+
+void test()
+{
+    Fretboard fretboard;
+    fretboard.printTab();
+
+    Chord openC;
+    openC.setNumFingers(3);
+    openC.setNote(Note(2,1,index));
+    openC.setNote(Note(4,2,middle));
+    openC.setNote(Note(5,3,ring));
+
+    fretboard.setChord(openC); 
+    fretboard.printTab();
+
+    fretboard.reset();
+
+    Chord openG;
+    openG.setNumFingers(4);
+    openG.setNote(Note(1,3,pinky));
+    openG.setNote(Note(2,3,ring));
+    openG.setNote(Note(5,2,index));
+    openG.setNote(Note(6,3,middle));
+
+    fretboard.setChord(openG); 
+    fretboard.printTab();
+}
+
 int main()
 {
-    std::cout << "good to go!" << std::endl;
+
+
 }
