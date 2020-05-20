@@ -47,6 +47,7 @@ send me a DM to check your pull request
 #define NUM_STRINGS 6
 #define NUM_FRETS 24
 #define NUM_KEYS 12
+#define NUM_CHORDS 3
 #include <iostream>
 
 enum Finger { thumb, index, middle, ring, pinky, none };
@@ -238,6 +239,7 @@ struct GuitarString
 
     Note note;
 
+    GuitarString();
     GuitarString(int stringNum);
     ~GuitarString();
 
@@ -280,6 +282,19 @@ Key GuitarString::getOpenStringKey(int strNum)
         default:
             return E;
     }
+}
+
+GuitarString::GuitarString()
+{
+    std::cout << "GuitarString CTOR" << std::endl;
+    numFrets = NUM_FRETS;
+    stringNum = 1;
+    openStringKey = E;
+    frettedKey = openStringKey;
+    frettedNum = 0;
+    note.setStringNum(1);
+    note.setFretNum(frettedNum);
+    note.setFinger(none);
 }
 
 GuitarString::GuitarString(int strNum)
@@ -554,7 +569,7 @@ void Fretboard::printTab()
 struct ChordProgression
 {
     int numChords;
-    Chord chords[NUM_KEYS];
+    Chord chords[3];
     Fretboard fretboard;
 
     ChordProgression();
@@ -567,6 +582,7 @@ struct ChordProgression
 ChordProgression::ChordProgression()
 {
     std::cout << "ChordProgression CTOR" << std::endl;
+    numChords = 3;
 }
 
 ChordProgression::~ChordProgression()
@@ -576,26 +592,29 @@ ChordProgression::~ChordProgression()
 
 void ChordProgression::setChords()
 {
-    Chord openC;
-    openC.setNumFingers(3);
-    openC.setNote(Note(2,1,index));
-    openC.setNote(Note(4,2,middle));
-    openC.setNote(Note(5,3,ring));
+    chords[0].setNumFingers(3);
+    chords[0].setNote(Note(2,1,index));
+    chords[0].setNote(Note(4,2,middle));
+    chords[0].setNote(Note(5,3,ring));
 
-    Chord openG;
-    openG.setNumFingers(4);
-    openG.setNote(Note(1,3,pinky));
-    openG.setNote(Note(2,3,ring));
-    openG.setNote(Note(5,2,index));
-    openG.setNote(Note(6,3,middle));
+    chords[1].setNumFingers(4);
+    chords[1].setNote(Note(1,3,pinky));
+    chords[1].setNote(Note(2,3,ring));
+    chords[1].setNote(Note(5,2,index));
+    chords[1].setNote(Note(6,3,middle));
+
+    chords[2].setNumFingers(2);
+    chords[2].setNote(Note(4,2,ring));
+    chords[2].setNote(Note(5,2,middle));
 }
 
 void ChordProgression::printChords()
 {
-    for (int i = 1; i <= 3; i++)
+    for (int i = 1; i <= numChords; i++)
     {
-        fretboard.printTab();
         fretboard.reset();
+
+        fretboard.printTab();
     }
 }
 
