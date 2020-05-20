@@ -377,7 +377,6 @@ struct Chord
     int numNotes;
     int numFingers;
 
-    Key key;
     Note notes[NUM_STRINGS];
 
     Chord();
@@ -390,13 +389,10 @@ struct Chord
     int getNumFingers();
     void setNumFingers(int digits);
 
-    Key getKey();
-    void setKey(Key k);
-
     void setNote(Note note);
     void resetChord();
 
-
+    void printChord();
 };
 
 Chord::Chord()
@@ -447,17 +443,6 @@ void Chord::setNumFingers(int digits)
     numFingers = digits;
 }
 
-
-Key Chord::getKey()
-{
-    return key;
-}
-
-void Chord::setKey(Key k)
-{
-    key = k;
-}
-
 void Chord::setNote(Note note)
 {
     int s = note.getStringNum();
@@ -488,6 +473,15 @@ void Chord::resetChord()
     notes[5].setStringNum(6); 
     notes[5].setFretNum(0);
     notes[5].setFinger(none);
+}
+
+void Chord::printChord()
+{
+    for ( int i = 0; i < numNotes; i++)
+    {
+        Note note = chord[i];
+        std::cout << note.getKey() << std::endl;
+    }
 }
 
 struct Fretboard
