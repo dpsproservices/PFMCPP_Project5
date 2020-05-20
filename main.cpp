@@ -46,7 +46,7 @@ send me a DM to check your pull request
  */
 #define NUM_STRINGS 6
 #define NUM_FRETS 24
-//#define NUM_KEYS 12
+#define NUM_KEYS 12
 #include <iostream>
 
 enum Finger { thumb, index, middle, ring, pinky, none };
@@ -190,7 +190,8 @@ Key Note::getKeyByInternal(int interval)
     int i = 0;
     while(i < interval)
     {
-        semitone = getNextSemitone(semitone);
+        semitone = getNextSemitone();
+        key = semitone;
         i++;
     }
 
@@ -479,26 +480,22 @@ void Chord::printChord()
 {
     for ( int i = 0; i < numNotes; i++)
     {
-        Note note = chord[i];
-        std::cout << note.getKey() << std::endl;
+        std::cout << notes[i].getKey() << std::endl;
     }
 }
 
 struct Fretboard
-{
-    int frets;
-    int numStrings;    
+{   
     int numNotesFretted;
     int octave;
     Chord chord;
 
+    GuitarString strings[NUM_STRINGS];
+
     Fretboard();
     ~Fretboard();
 
-    void setChord(Chord c);
-    void removeChord();
-
-    void changeOctave(int oct);
+    void raiseOctave();
 
     void printTab();
     void reset();
@@ -506,12 +503,17 @@ struct Fretboard
 
 Fretboard::Fretboard()
 {
-    numStrings = NUM_STRINGS;
-    frets = NUM_FRETS;
     numNotesFretted = 0;
     octave = 1;
 
     chord.resetChord();
+
+    strings[0] = GuitarString(1);
+    strings[1] = GuitarString(2);
+    strings[2] = GuitarString(3);
+    strings[3] = GuitarString(4);
+    strings[4] = GuitarString(5);
+    strings[5] = GuitarString(6);
 
     std::cout << "Fretboard CTOR" << std::endl;
 }
@@ -521,46 +523,64 @@ Fretboard::~Fretboard()
     std::cout << "Fretboard DTOR" << std::endl;
 }
 
-void Fretboard::setChord(Chord c)
-{
-    chord.setKey(c.getKey());
-    chord.setNumNotes(c.getNumNotes());
-    chord.setNumFingers(c.getNumFingers());
-}
-
 void Fretboard::reset()
 {
     chord.resetChord();
 }
 
-void Fretboard::changeOctave(int oct)
+void Fretboard::raiseOctave()
 {
-    octave = oct;
+    int i = 0;
+    while (i < NUM_STRINGS)
+    {
+        GuitarString s = strings[i];
+        Note note = s.note;
+        int fret = note.getFretNum();
+        fret += 12;
+        s.note.setFretNum(fret);
+        i++;
+    }
 }
 
 void Fretboard::printTab()
 {
-    for(int s = 1; s <= numStrings; s++)
+    for(int i = 0; i < NUM_STRINGS; i++)
     {
-
+        GuitarString s = strings[i];
+        s.printGuitarString();
     }
 }
 
-void test()
+struct ChordProgression
 {
+    int numChords;
+    Chord chords[NUM_KEYS];
     Fretboard fretboard;
-    fretboard.printTab();
 
+    ChordProgression();
+    ~ChordProgression();
+
+    void setChords();
+    void printChords();
+};
+
+ChordProgression::ChordProgression()
+{
+    std::cout << "ChordProgression CTOR" << std::endl;
+}
+
+ChordProgression::~ChordProgression()
+{
+    std::cout << "ChordProgression DTOR" << std::endl;
+}
+
+void ChordProgression::setChords()
+{
     Chord openC;
     openC.setNumFingers(3);
     openC.setNote(Note(2,1,index));
     openC.setNote(Note(4,2,middle));
     openC.setNote(Note(5,3,ring));
-
-    fretboard.setChord(openC); 
-    fretboard.printTab();
-
-    fretboard.reset();
 
     Chord openG;
     openG.setNumFingers(4);
@@ -568,13 +588,20 @@ void test()
     openG.setNote(Note(2,3,ring));
     openG.setNote(Note(5,2,index));
     openG.setNote(Note(6,3,middle));
+}
 
-    fretboard.setChord(openG); 
-    fretboard.printTab();
+void ChordProgression::printChords()
+{
+    for (int i = 1; i <= 3; i++)
+    {
+        fretboard.printTab();
+        fretboard.reset();
+    }
 }
 
 int main()
 {
-
-
+    ChordProgression p;
+    p.setChords();
+    p.printChords();
 }
