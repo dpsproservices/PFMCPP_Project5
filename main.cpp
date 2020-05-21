@@ -99,7 +99,7 @@ Note::Note(int str, int fret, Finger digit)
 
 Note::~Note()
 {
-    //std::cout << "Note DTOR" << std::endl;
+    std::cout << "Note DTOR" << std::endl;
 }
 
 int Note::getStringNum()
@@ -439,7 +439,7 @@ Chord::Chord()
 
 Chord::~Chord()
 {
-    //std::cout << "Chord DTOR" << std::endl;
+    std::cout << "Chord DTOR" << std::endl;
 }
 
 int Chord::getNumNotes()
@@ -549,7 +549,7 @@ Fretboard::Fretboard()
 
 Fretboard::~Fretboard()
 {
-    //std::cout << "Fretboard DTOR" << std::endl;
+    std::cout << "Fretboard DTOR" << std::endl;
 }
 
 void Fretboard::reset()
@@ -601,7 +601,7 @@ ChordProgression::ChordProgression()
 
 ChordProgression::~ChordProgression()
 {
-    //std::cout << "ChordProgression DTOR" << std::endl;
+    std::cout << "ChordProgression DTOR" << std::endl;
 }
 
 void ChordProgression::setChords()
@@ -636,6 +636,10 @@ void ChordProgression::printChords()
 
 int main()
 {
+    std::cout << std::endl;
+    std::cout << "Fretboard Tab V 1.0" << std::endl;
+    std::cout << std::endl;
+
     Fretboard f = Fretboard();
     f.reset();
     f.printTab();
@@ -649,12 +653,17 @@ int main()
     f.chord.setNote(Note(4,2,middle));
     f.chord.setNote(Note(5,3,ring));
     
+    std::cout << "First chord notes are: " << std::endl;
+    f.chord.printChord();
+
+    std::cout << std::endl;
+
+    std::cout << "First chord diagram: " << std::endl;
+
+    f.raiseOctave();
     f.printTab();
 
-    //f.raiseOctave();
-    //f.printTab();
-
-    //ChordProgression p;
-    //p.setChords();
-    //p.printChords();
+    ChordProgression p;
+    p.setChords();
+    p.printChords();
 }
