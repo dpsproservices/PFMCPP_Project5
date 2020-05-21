@@ -60,7 +60,7 @@ struct Note
     char key; 
     
     Note();
-    Note(int str, int fret, Finger digit);
+    Note(int str, int fret, Finger digit, char note);
     ~Note();
 
     // Note operator=(const Note & n);
@@ -89,11 +89,12 @@ Note::Note()
     //std::cout << "Note default CTOR" << std::endl; 
 }
 
-Note::Note(int str, int fret, Finger digit)
+Note::Note(int str, int fret, Finger digit, char note)
 {
     stringNum = str;
     fretNum = fret;
     finger = digit;
+    key = note;
     //std::cout << "Note CTOR" << std::endl;
 }
 
@@ -295,6 +296,7 @@ GuitarString::GuitarString(int strNum)
     openStringKey = getOpenString(strNum);
     frettedKey = openStringKey;
     frettedNum = 0;
+
     note.setStringNum(strNum);
     note.setFretNum(frettedNum);
     note.setFinger(none);
@@ -356,6 +358,7 @@ void GuitarString::setNote(Note n)
     note.setStringNum(n.getStringNum());
     note.setFretNum(n.getFretNum());
     note.setFinger(n.getFinger());
+    note.setKey(n.getKey());
 }
 
 void GuitarString::printGuitarString()
@@ -467,9 +470,13 @@ void Chord::setNote(Note note)
     int s = note.getStringNum();
     int i = s - 1;
     Finger f = note.getFinger();
+    char key = note.getKey();
+    int fret = note.getFretNum();
+
     notes[i].setStringNum(s); 
-    notes[i].setFretNum(0);
+    notes[i].setFretNum(fret);
     notes[i].setFinger(f);
+    notes[i].setKey(key);
 }
 
 void Chord::resetChord()
@@ -507,7 +514,7 @@ void Chord::resetChord()
 
 void Chord::printChord()
 {
-    for ( int i = 0; i < numNotes; i++)
+    for ( int i = 0; i < NUM_STRINGS; i++)
     {
         std::cout << notes[i].getKey() << std::endl;
     }
@@ -606,23 +613,26 @@ ChordProgression::~ChordProgression()
 
 void ChordProgression::setChords()
 {
+    chords[0].resetChord();
     chords[0].setNumFingers(3);
     chords[0].setNumNotes(3);
-    chords[0].setNote(Note(2,1,index));
-    chords[0].setNote(Note(4,2,middle));
-    chords[0].setNote(Note(5,3,ring));
+    chords[0].setNote(Note(2,1,index,'C'));
+    chords[0].setNote(Note(4,2,middle,'E'));
+    chords[0].setNote(Note(5,3,ring,'C'));
 
+    chords[1].resetChord();
     chords[1].setNumFingers(4);
     chords[1].setNumNotes(4);
-    chords[1].setNote(Note(1,3,pinky));
-    chords[1].setNote(Note(2,3,ring));
-    chords[1].setNote(Note(5,2,index));
-    chords[1].setNote(Note(6,3,middle));
+    chords[1].setNote(Note(1,3,pinky,'G'));
+    chords[1].setNote(Note(2,3,ring,'D'));
+    chords[1].setNote(Note(5,2,index,'B'));
+    chords[1].setNote(Note(6,3,middle,'G'));
 
+    chords[2].resetChord();
     chords[2].setNumFingers(2);
     chords[2].setNumNotes(2);
-    chords[2].setNote(Note(4,2,ring));
-    chords[2].setNote(Note(5,2,middle));
+    chords[2].setNote(Note(4,2,ring,'E'));
+    chords[2].setNote(Note(5,2,middle,'B'));
 }
 
 void ChordProgression::printChords()
@@ -649,9 +659,14 @@ int main()
     // play a chord
     f.chord.setNumFingers(3);
     f.chord.setNumNotes(3);
-    f.chord.setNote(Note(2,1,index));
-    f.chord.setNote(Note(4,2,middle));
-    f.chord.setNote(Note(5,3,ring));
+    Note note1 = Note(2,1,index,'C');
+    f.chord.setNote(note1);
+
+    Note note2 = Note(4,2,middle,'E');
+    f.chord.setNote(note2);
+
+    Note note3 = Note(5,3,ring,'C');
+    f.chord.setNote(note3);
     
     std::cout << "First chord notes are: " << std::endl;
     f.chord.printChord();
