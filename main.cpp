@@ -161,6 +161,8 @@ char Note::getNextTone()
             return 'G';
         case 'G':
             return 'A';
+        default:
+            return 'A';
     }
 }
 
