@@ -359,6 +359,9 @@ void GuitarString::setNote(Note n)
     note.setFretNum(n.getFretNum());
     note.setFinger(n.getFinger());
     note.setKey(n.getKey());
+
+    frettedKey = n.getKey();
+    frettedNum = n.getFretNum();
 }
 
 void GuitarString::printGuitarString()
@@ -669,17 +672,23 @@ int main()
     // play a chord
     f.chord.setNumFingers(3);
     f.chord.setNumNotes(3);
+    
     Note note1 = Note(2,1,index,'C');
     f.chord.setNote(note1);
+    f.strings[1].setNote(note1);
 
     Note note2 = Note(4,2,middle,'E');
     f.chord.setNote(note2);
+    f.strings[3].setNote(note2);
 
     Note note3 = Note(5,3,ring,'C');
     f.chord.setNote(note3);
+    f.strings[4].setNote(note3);
     
     std::cout << "First chord notes are: " << std::endl;
     f.chord.printChord();
+
+    
 
     std::cout << std::endl;
 
