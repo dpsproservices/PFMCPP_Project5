@@ -366,12 +366,11 @@ void GuitarString::setNote(Note n)
 
 void GuitarString::printGuitarString()
 {
-
     std::cout << stringNum << " " << openStringKey << " |";
 
     for(int fret = 1; fret <= NUM_FRETS; fret++)
     {
-        if(fret == getFrettedNum())
+        if(fret == frettedNum)
         {
             std::cout << note.getTab();
         }
@@ -587,6 +586,7 @@ void Fretboard::raiseOctave()
         int fret = note.getFretNum();
         fret += 12;
         s.note.setFretNum(fret);
+        s.setFrettedNum(fret);
         i++;
     }
 }
@@ -688,15 +688,18 @@ int main()
     std::cout << "First chord notes are: " << std::endl;
     f.chord.printChord();
 
-    
-
     std::cout << std::endl;
 
     std::cout << "First chord diagram: " << std::endl;
     f.printTab();
 
+    std::cout << std::endl;
+    std::cout << "First chord octave up: " << std::endl;
+
     f.raiseOctave();
     f.printTab();
+
+    std::cout << std::endl;
 
     ChordProgression p;
     p.setChords();
