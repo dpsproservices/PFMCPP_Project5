@@ -659,6 +659,7 @@ int main()
     std::cout << std::endl;
 
     std::cout << "First chord diagram: " << std::endl;
+    f.printTab();
 
     f.raiseOctave();
     f.printTab();
