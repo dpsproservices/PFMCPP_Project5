@@ -43,392 +43,628 @@ Make a pull request after you make your first commit and pin the pull request li
 send me a DM to check your pull request
 
  Wait for my code review.
-
- Apr 4th - Give me 5 member variables and 3 member functions per UDT
  */
-
+#define NUM_STRINGS 6
+#define NUM_FRETS 24
+#define NUM_KEYS 12
+#define NUM_CHORDS 3
 #include <iostream>
 
+enum Finger { thumb, index, middle, ring, pinky, none };
 
-/*
- copied UDT 1:
- */
-struct FloatType
+struct Note
 {
-    bool b;
-    char c;
-    int i;
-    float f;
-    double d;
+    int stringNum;
+    int fretNum;
+    Finger finger;
+    char key; 
     
-    FloatType();
-    ~FloatType();
+    Note();
+    Note(int str, int fret, Finger digit);
+    ~Note();
 
-    float add( float lhs, float rhs );
-    float subtract( float lhs, float rhs );
-    float multiply( float lhs, float rhs );
-    float divide( float lhs, float rhs );
+    // Note operator=(const Note & n);
 
-    void doWhile();
-    void doFor();
+    int getStringNum();
+    void setStringNum(int stringNum);
+    int getFretNum();
+    void setFretNum(int fret);
+    Finger getFinger();
+    void setFinger(Finger finger);
+    char getKey();
+    void setKey(char key);
+
+    char getNextTone();
+    char getKeyByInternal(int interval);
+    void printCycle(int interval);
+
+    char getTab();
 };
 
-/*
- copied UDT 2:
- */
-struct DoubleType
+Note::Note()
 {
-    bool b;
-    char c;
-    int i;
-    float f;
-    double d;
-    
-    DoubleType();
-    ~DoubleType();
+    stringNum = 1;
+    fretNum = 0;
+    finger = none;
+    //std::cout << "Note default CTOR" << std::endl; 
+}
 
-    double add( double lhs, double rhs );
-    double subtract( double lhs, double rhs );
-    double multiply( double lhs, double rhs );
-    double divide( double lhs, double rhs );
+Note::Note(int str, int fret, Finger digit)
+{
+    stringNum = str;
+    fretNum = fret;
+    finger = digit;
+    //std::cout << "Note CTOR" << std::endl;
+}
 
-    void doWhile();
-    void doFor();    
+Note::~Note()
+{
+    std::cout << "Note DTOR" << std::endl;
+}
+
+int Note::getStringNum()
+{
+    return stringNum;
+}
+
+void Note::setStringNum(int strNum)
+{
+    stringNum = strNum;
+}
+
+int Note::getFretNum()
+{
+    return fretNum;
+}
+
+void Note::setFretNum(int fret)
+{
+    fretNum = fret;
+}
+
+Finger Note::getFinger()
+{
+    return finger;
+}
+
+void Note::setFinger(Finger digit)
+{
+    finger = digit;
+}
+
+void Note::setKey(char k)
+{
+    key = k;
+}
+
+char Note::getKey()
+{
+    return key;
+}
+
+char Note::getNextTone()
+{
+    switch(key)
+    {
+        case 'A':
+            return 'B';
+        case 'B':
+            return 'C';
+        case 'C':
+            return 'D';
+        case 'D':
+            return 'E';
+        case 'E':
+            return 'F';
+        case 'F':
+            return 'G';
+        case 'G':
+            return 'A';
+    }
+}
+
+char Note::getKeyByInternal(int interval)
+{
+    char semitone = key;
+
+    if(interval == 0)
+    {
+        return semitone;
+    }
+
+    if(interval < 0)
+    {
+        interval = 12 + interval;
+    }
+
+    int i = 0;
+    while(i < interval)
+    {
+        semitone = getNextTone();
+        key = semitone;
+        i++;
+    }
+
+    return semitone;
+}
+
+void Note::printCycle(int interval)
+{
+    char semitone = 'A';
+    for (int i = 1; i <= NUM_KEYS; i++)
+    {
+        std::cout << semitone << std::endl;
+        semitone = getKeyByInternal(interval);
+    }
+}
+
+char Note::getTab()
+{
+    switch (finger)
+    {
+        case thumb:
+            return 'T';
+        case index:
+            return '1';
+        case middle:
+            return '2';
+        case ring:
+            return '3';
+        case pinky:
+            return '4';
+        case none:
+            return '-';
+    }
+}
+
+struct GuitarString
+{
+    int stringNum;
+    int numFrets;
+    char openStringKey;
+    char frettedKey;
+
+    int frettedNum;
+
+    Note note;
+
+    GuitarString();
+    GuitarString(int stringNum);
+    ~GuitarString();
+
+    int getStringNum();
+    void setStringNum(int stringNum);
+
+    int getNumFrets();
+    char getOpenStringKey();
+
+    void setFrettedKey(char key);
+    char getFrettedKey();
+
+    char getOpenString(int stringNum);
+
+    int getFrettedNum();
+    void setFrettedNum(int fretNum);
+
+    //Note getNote();
+    void setNote(Note note);
+
+    void printGuitarString();
 };
 
-/*
- copied UDT 3:
- */
-struct IntType
+char GuitarString::getOpenString(int strNum)
 {
-    bool b;
-    char c;
-    int i;
-    float f;
-    double d;
-    
-    IntType();
-    ~IntType();
+    switch (strNum)
+    {
+        case 1:
+            return 'E';
+        case 2:
+            return 'B';
+        case 3:
+            return 'G';
+        case 4:
+            return 'D';
+        case 5:
+            return 'A';
+        case 6:
+            return 'E';
+        default:
+            return 'E';
+    }
+}
 
-    int add( int lhs, int rhs );
-    int subtract( int lhs, int rhs );
-    int multiply( int lhs, int rhs );
-    int divide( int lhs, int rhs );
+GuitarString::GuitarString()
+{
+    //std::cout << "GuitarString default CTOR" << std::endl;
+    numFrets = NUM_FRETS;
+    stringNum = 1;
+    openStringKey = 'E';
+    frettedKey = 'E';
+    frettedNum = 0;
+    note.setStringNum(1);
+    note.setFretNum(frettedNum);
+    note.setFinger(none);
+    note.setKey('E');
+}
 
-    void doWhile();
-    void doFor();    
+GuitarString::GuitarString(int strNum)
+{
+    //std::cout << "GuitarString CTOR" << std::endl;
+    numFrets = NUM_FRETS;
+    stringNum = strNum;
+    openStringKey = getOpenString(strNum);
+    frettedKey = openStringKey;
+    frettedNum = 0;
+    note.setStringNum(strNum);
+    note.setFretNum(frettedNum);
+    note.setFinger(none);
+    note.setKey(openStringKey);
+}
+
+GuitarString::~GuitarString()
+{
+    //std::cout << "GuitarString DTOR" << std::endl;
+}
+
+int GuitarString::getStringNum()
+{
+    return stringNum;
+}
+
+void GuitarString::setStringNum(int strNum)
+{
+    stringNum = strNum;
+}
+
+int GuitarString::getNumFrets()
+{
+    return numFrets;
+}
+
+char GuitarString::getOpenStringKey()
+{
+    return openStringKey;
+}
+
+void GuitarString::setFrettedKey(char key)
+{
+    frettedKey = key;
+}
+
+char GuitarString::getFrettedKey()
+{
+    return frettedKey;
+}
+
+int GuitarString::getFrettedNum()
+{
+    return frettedNum;
+}
+
+void GuitarString::setFrettedNum(int fretNum)
+{
+    frettedNum = fretNum;
+}
+
+//Note GuitarString::getNote()
+//{
+//    return note;
+//}
+
+void GuitarString::setNote(Note n)
+{
+    note.setStringNum(n.getStringNum());
+    note.setFretNum(n.getFretNum());
+    note.setFinger(n.getFinger());
+}
+
+void GuitarString::printGuitarString()
+{
+
+    std::cout << stringNum << " " << openStringKey << " |";
+
+    for(int fret = 1; fret <= NUM_FRETS; fret++)
+    {
+        if(fret == getFrettedNum())
+        {
+            std::cout << note.getTab();
+        }
+        else 
+        {
+            std::cout << "-";
+        }
+    }
+
+    std::cout << std::endl;
+}
+
+
+struct Chord
+{
+    int numNotes;
+    int numFingers;
+
+    Note notes[NUM_STRINGS];
+
+    Chord();
+    ~Chord();
+
+    // Chord operator=(const Chord & c);
+
+    int getNumNotes();
+    void setNumNotes(int num);
+
+    int getNumFingers();
+    void setNumFingers(int digits);
+
+    void setNote(Note note);
+    void resetChord();
+
+    void printChord();
 };
 
-/*
- new UDT 4:
- */
-struct Stars
+Chord::Chord()
 {
-    IntType it;
-    FloatType ft;
-    DoubleType dt;
+    //std::cout << "Chord CTOR" << std::endl;
+    notes[0].setStringNum(1); 
+    notes[0].setFretNum(0);
+    notes[0].setFinger(none);
+    notes[0].setKey('E');
 
-    int x;
-    float y;
+    notes[1].setStringNum(2); 
+    notes[1].setFretNum(0);
+    notes[1].setFinger(none);
+    notes[1].setKey('B');
 
-    Stars();
-    ~Stars();
+    notes[2].setStringNum(3); 
+    notes[2].setFretNum(0);
+    notes[2].setFinger(none);
+    notes[2].setKey('G');
 
-    void doStuff();
-    int get10x();
-    float get10y();
+    notes[3].setStringNum(4); 
+    notes[3].setFretNum(0);
+    notes[3].setFinger(none);
+    notes[3].setKey('D');
+
+    notes[4].setStringNum(5); 
+    notes[4].setFretNum(0);
+    notes[4].setFinger(none);
+    notes[4].setKey('A');
+
+    notes[5].setStringNum(6); 
+    notes[5].setFretNum(0);
+    notes[5].setFinger(none);
+    notes[5].setKey('E');
+}
+
+Chord::~Chord()
+{
+    std::cout << "Chord DTOR" << std::endl;
+}
+
+int Chord::getNumNotes()
+{
+    return numNotes;
+}
+
+void Chord::setNumNotes(int num)
+{   
+    numNotes = num;
+}
+
+int Chord::getNumFingers()
+{
+    return numFingers;
+}
+
+void Chord::setNumFingers(int digits)
+{
+    numFingers = digits;
+}
+
+void Chord::setNote(Note note)
+{
+    int s = note.getStringNum();
+    int i = s - 1;
+    Finger f = note.getFinger();
+    notes[i].setStringNum(s); 
+    notes[i].setFretNum(0);
+    notes[i].setFinger(f);
+}
+
+void Chord::resetChord()
+{
+    notes[0].setStringNum(1); 
+    notes[0].setFretNum(0);
+    notes[0].setFinger(none);
+    notes[0].setKey('E');
+
+    notes[1].setStringNum(2); 
+    notes[1].setFretNum(0);
+    notes[1].setFinger(none);
+    notes[1].setKey('B');
+
+    notes[2].setStringNum(3); 
+    notes[2].setFretNum(0);
+    notes[2].setFinger(none);
+    notes[2].setKey('G');
+
+    notes[3].setStringNum(4); 
+    notes[3].setFretNum(0);
+    notes[3].setFinger(none);
+    notes[3].setKey('D');
+
+    notes[4].setStringNum(5); 
+    notes[4].setFretNum(0);
+    notes[4].setFinger(none);
+    notes[4].setKey('A');
+
+    notes[5].setStringNum(6); 
+    notes[5].setFretNum(0);
+    notes[5].setFinger(none);
+    notes[5].setKey('E');
+}
+
+void Chord::printChord()
+{
+    for ( int i = 0; i < numNotes; i++)
+    {
+        std::cout << notes[i].getKey() << std::endl;
+    }
+}
+
+struct Fretboard
+{   
+    int numNotesFretted;
+    int octave;
+    Chord chord;
+
+    GuitarString strings[NUM_STRINGS];
+
+    Fretboard();
+    ~Fretboard();
+
+    void raiseOctave();
+
+    void printTab();
+    void reset();
 };
 
-/*
- new UDT 5:
- */
-struct Stripes
+Fretboard::Fretboard()
 {
-    IntType it;
-    FloatType ft;
-    DoubleType dt;
+    numNotesFretted = 0;
+    octave = 1;
 
-    int x;
-    float y;
+    chord.resetChord();
 
-    Stripes();
-    ~Stripes();
+    strings[0] = GuitarString(1);
+    strings[1] = GuitarString(2);
+    strings[2] = GuitarString(3);
+    strings[3] = GuitarString(4);
+    strings[4] = GuitarString(5);
+    strings[5] = GuitarString(6);
 
-    void doStuff();    
-    int get10x();
-    float get10y();
+    //std::cout << "Fretboard CTOR" << std::endl;
+}
+
+Fretboard::~Fretboard()
+{
+    std::cout << "Fretboard DTOR" << std::endl;
+}
+
+void Fretboard::reset()
+{
+    chord.resetChord();
+}
+
+void Fretboard::raiseOctave()
+{
+    int i = 0;
+    while (i < NUM_STRINGS)
+    {
+        GuitarString s = strings[i];
+        Note note = s.note;
+        int fret = note.getFretNum();
+        fret += 12;
+        s.note.setFretNum(fret);
+        i++;
+    }
+}
+
+void Fretboard::printTab()
+{
+    for(int i = 0; i < NUM_STRINGS; i++)
+    {
+        GuitarString s = strings[i];
+        s.printGuitarString();
+    }
+}
+
+struct ChordProgression
+{
+    int numChords;
+    Chord chords[NUM_CHORDS];
+    Fretboard fretboard;
+
+    ChordProgression();
+    ~ChordProgression();
+
+    void setChords();
+    void printChords();
 };
 
-
-
-
-FloatType::FloatType()
+ChordProgression::ChordProgression()
 {
-    f = 9.5f;
-    b = true;
-    c = 'c';
-    d = 123.456;
-    i = 99;
-    std::cout << "FloatType ctor" << " f: " << f << " b: " << b << " c: " << c << " d: " << d << " i: " << i << std::endl;
-}
-FloatType::~FloatType()
-{
-    std::cout << "FloatType dtor" << std::endl;
+    //std::cout << "ChordProgression CTOR" << std::endl;
+    numChords = NUM_CHORDS;
 }
 
-void FloatType::doWhile()
+ChordProgression::~ChordProgression()
 {
-    int count = 0;
-    while(count < 3)
+    std::cout << "ChordProgression DTOR" << std::endl;
+}
+
+void ChordProgression::setChords()
+{
+    chords[0].setNumFingers(3);
+    chords[0].setNumNotes(3);
+    chords[0].setNote(Note(2,1,index));
+    chords[0].setNote(Note(4,2,middle));
+    chords[0].setNote(Note(5,3,ring));
+
+    chords[1].setNumFingers(4);
+    chords[1].setNumNotes(4);
+    chords[1].setNote(Note(1,3,pinky));
+    chords[1].setNote(Note(2,3,ring));
+    chords[1].setNote(Note(5,2,index));
+    chords[1].setNote(Note(6,3,middle));
+
+    chords[2].setNumFingers(2);
+    chords[2].setNumNotes(2);
+    chords[2].setNote(Note(4,2,ring));
+    chords[2].setNote(Note(5,2,middle));
+}
+
+void ChordProgression::printChords()
+{
+    for (int i = 0; i < NUM_CHORDS; i++)
     {
-        f = add(f,1.0);
-        std::cout << "FloatType doWhile " << f << std::endl;
-        count++;
+        Chord c = chords[i];
+        c.printChord();
     }
-}
-
-void FloatType::doFor()
-{
-    for(int count = 0; count < 3; count++)
-    {
-        f = add(f,2.0);
-        std::cout << "FloatType doFor " << f << std::endl;
-    }
-}
-
-float FloatType::add( float lhs, float rhs )
-{
-    return lhs + rhs;
-}
-
-float FloatType::subtract( float lhs, float rhs )
-{
-    return lhs - rhs;
-}
-
-float FloatType::multiply( float lhs, float rhs )
-{
-    return lhs * rhs;
-}
-
-float FloatType::divide( float lhs, float rhs )
-{
-    if ( rhs <= 0.0f )
-    {
-        std::cout << "Warning division by zero." << std::endl;
-    }
-    return lhs / rhs;
-}
-
-
-DoubleType::DoubleType()
-{
-    f = 9.5f;
-    b = true;
-    c = 'c';
-    d = 123.456;
-    i = 99;
-    std::cout << "DoubleType ctor" << " f: " << f << " b: " << b << " c: " << c << " d: " << d << " i: " << i << std::endl;
-}
-DoubleType::~DoubleType()
-{
-    std::cout << "DoubleType dtor" << std::endl;
-}
-
-void DoubleType::doWhile()
-{
-    int count = 0;
-    while(count < 3)
-    {
-        d = add(d,6.0);
-        std::cout << "DoubleType doWhile " << d << std::endl;
-        count++;
-    }
-}
-
-void DoubleType::doFor()
-{
-    for(int count = 0; count < 3; count++)
-    {
-        d = add(d,4.5);
-        std::cout << "DoubleType doFor " << d << std::endl;
-    }
-}
-
-double DoubleType::add( double lhs, double rhs )
-{
-    return lhs + rhs;
-}
-
-double DoubleType::subtract( double lhs, double rhs )
-{
-    return lhs - rhs;
-}
-
-double DoubleType::multiply( double lhs, double rhs )
-{
-    return lhs * rhs;
-}
-
-double DoubleType::divide( double lhs, double rhs )
-{
-    if ( rhs <= 0.0 )
-    {
-        std::cerr << "Warning division by zero." << std::endl;
-    }
-    return lhs / rhs;
-}
-
-
-IntType::IntType()
-{
-    f = 9.5f;
-    b = true;
-    c = 'c';
-    d = 123.456;
-    i = 99;
-    std::cout << "IntType ctor" << " f: " << f << " b: " << b << " c: " << c << " d: " << d << " i: " << i << std::endl;
-}
-IntType::~IntType()
-{
-    std::cout << "IntType dtor" << std::endl;
-}
-
-void IntType::doWhile()
-{
-    int count = 0;
-    while(count < 3)
-    {     
-        i = add(i,count);
-        std::cout << "IntType doWhile " << i << std::endl;
-        count++;
-    }
-}
-
-void IntType::doFor()
-{
-    for(int count = 0; count < 3; count++)
-    {
-        i = add(i,count);
-        std::cout << "IntType doFor " << i << std::endl;
-    }
-}
-
-int IntType::add( int lhs, int rhs )
-{
-    return lhs + rhs;
-}
-
-int IntType::subtract( int lhs, int rhs )
-{
-    return lhs - rhs;
-}
-
-int IntType::multiply( int lhs, int rhs )
-{
-    return lhs * rhs;
-}
-
-int IntType::divide( int lhs, int rhs )
-{
-    if ( rhs <= 0.0 )
-    {
-        std::cerr << "Warning division by zero." << std::endl;
-        return lhs;
-    } 
-    else 
-    {
-        return lhs / rhs;
-    }
-}
-
-Stars::Stars()
-{
-    std::cout << "Stars ctor" << std::endl;
-    
-}
-
-Stars::~Stars()
-{
-    std::cout << "Stars dtor" << std::endl;
-}
-
-void Stars::doStuff()
-{
-    std::cout << "Stars doStuff" << std::endl;
-    ft.doWhile();
-    dt.doFor();
-    it.doWhile();
-} 
-
-int Stars::get10x()
-{
-    return it.multiply(10, x);
-}
-
-float Stars::get10y()
-{
-    return ft.multiply(10, y);
-}
-
-Stripes::Stripes()
-{
-    std::cout << "Stripes ctor" << std::endl;
-}
-
-Stripes::~Stripes()
-{
-    std::cout << "Stripes dtor" << std::endl;
-}
-
-void Stripes::doStuff()
-{
-    auto resultFT = ft.add(3.2f, 23.f );       
-    std::cout << "result of ft.add(): " << resultFT << std::endl;
-
-    resultFT = ft.subtract(3.2f, 23.f );
-    std::cout << "result of ft.subtract(): " << resultFT << std::endl;
-
-    resultFT = ft.multiply(3.2f, 23.f );        
-    std::cout << "result of ft.multiply(): " << resultFT << std::endl;
-
-    resultFT = ft.divide(3.2f, 23.f );     
-    std::cout << "result of ft.divide(): " << resultFT << std::endl;
-
-    auto resultDT = dt.add(3.2, 23. );       
-    std::cout << "result of dt.add(): " << resultDT << std::endl;
-
-    resultDT = dt.subtract(3.2, 23. );
-    std::cout << "result of dt.subtract(): " << resultDT << std::endl;
-
-    resultDT = dt.multiply(3.2, 23. );        
-    std::cout << "result of dt.multiply(): " << resultDT << std::endl;
-
-    resultDT = dt.divide(3.2, 23. );     
-    std::cout << "result of dt.divide(): " << resultDT << std::endl;
-
-    auto resultIT = it.add(3, 23 );       
-    std::cout << "result of it.add(): " << resultIT << std::endl;
-
-    resultIT = it.subtract(3, 23 );
-    std::cout << "result of it.subtract(): " << resultIT << std::endl;
-
-    resultIT = it.multiply(3, 23 );        
-    std::cout << "result of it.multiply(): " << resultIT << std::endl;
-
-    resultIT = it.divide(3, 23 );     
-    std::cout << "result of it.divide(): " << resultIT << std::endl;
 }
 
 int main()
 {
-    Stars stars;
+    std::cout << std::endl;
+    std::cout << "Fretboard Tab V 1.0" << std::endl;
+    std::cout << std::endl;
 
-    stars.doStuff();
+    Fretboard f = Fretboard();
+    f.reset();
+    f.printTab();
 
-    Stripes stripes;
+    std::cout << std::endl;
 
-    stripes.doStuff();
+    // play a chord
+    f.chord.setNumFingers(3);
+    f.chord.setNumNotes(3);
+    f.chord.setNote(Note(2,1,index));
+    f.chord.setNote(Note(4,2,middle));
+    f.chord.setNote(Note(5,3,ring));
+    
+    std::cout << "First chord notes are: " << std::endl;
+    f.chord.printChord();
 
-    std::cout << "good to go!" << std::endl;
+    std::cout << std::endl;
+
+    std::cout << "First chord diagram: " << std::endl;
+    f.printTab();
+
+    f.raiseOctave();
+    f.printTab();
+
+    ChordProgression p;
+    p.setChords();
+    p.printChords();
 }
