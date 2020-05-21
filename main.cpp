@@ -531,6 +531,8 @@ struct Fretboard
     Fretboard();
     ~Fretboard();
 
+    void setChord(Chord c);
+
     void raiseOctave();
 
     void printTab();
@@ -562,6 +564,14 @@ Fretboard::~Fretboard()
 void Fretboard::reset()
 {
     chord.resetChord();
+}
+
+void Fretboard::setChord(Chord c)
+{
+    for (int i = 0; i < NUM_STRINGS; i++)
+    {
+        chord.notes[i] = c.notes[i];
+    }
 }
 
 void Fretboard::raiseOctave()
