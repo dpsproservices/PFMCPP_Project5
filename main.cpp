@@ -94,7 +94,9 @@ Note::Note(int str, int fret, Finger digit, char note)
     stringNum = str;
     fretNum = fret;
     finger = digit;
+
     key = note;
+
     //std::cout << "Note CTOR" << std::endl;
 }
 
@@ -536,7 +538,6 @@ struct Fretboard
     ~Fretboard();
 
     void setChord(Chord c);
-
     void raiseOctave();
 
     void printTab();
@@ -627,7 +628,7 @@ ChordProgression::~ChordProgression()
 }
 
 void ChordProgression::setChords()
-{
+
     chords[0].resetChord();
     chords[0].setNumFingers(3);
     chords[0].setNumNotes(3);
