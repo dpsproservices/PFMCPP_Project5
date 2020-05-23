@@ -394,6 +394,7 @@ struct Chord
     int numFingers;
 
     Note notes[NUM_STRINGS];
+    bool isBarred;
 
     Chord();
     ~Chord();
@@ -410,6 +411,9 @@ struct Chord
     void resetChord();
 
     void printChord();
+
+    bool getIsBarred();
+    void setIsBarred();
 };
 
 Chord::Chord()
@@ -526,6 +530,16 @@ void Chord::printChord()
     }
 }
 
+bool Chord::getIsBarred()
+{
+    return isBarred;
+}
+
+void Chord::setIsBarred()
+{
+    isBarred = !isBarred;
+}
+
 struct Fretboard
 {   
     int numNotesFretted;
@@ -575,6 +589,7 @@ void Fretboard::setChord(Chord c)
 {
     for (int i = 0; i < NUM_STRINGS; ++i)
     {
+        strings[i].setNote(c.notes[i]);
         chord.notes[i] = c.notes[i];
     }
 }
@@ -584,22 +599,21 @@ void Fretboard::raiseOctave()
     int i = 0;
     while (i < NUM_STRINGS)
     {
-        GuitarString s = strings[i];
-        Note note = s.note;
+        Note note = strings[i].note;
         int fret = note.getFretNum();
         fret += 12;
         strings[i].note.setFretNum(fret);
         strings[i].setFrettedNum(fret);
         ++i;
     }
+    chord.setIsBarred();
 }
 
 void Fretboard::printTab()
 {
     for(int i = 0; i < NUM_STRINGS; ++i)
     {
-        GuitarString s = strings[i];
-        s.printGuitarString();
+        strings[i].printGuitarString();
     }
 }
 
@@ -614,6 +628,8 @@ struct ChordProgression
 
     void setChords();
     void printChords();
+
+    void play();
 };
 
 ChordProgression::ChordProgression()
@@ -657,6 +673,21 @@ void ChordProgression::printChords()
     {
         Chord c = chords[i];
         c.printChord();
+    }
+}
+
+void ChordProgression::play()
+{
+    int i = 0;
+    while (i < NUM_CHORDS)
+    {
+        fretboard.reset();
+        fretboard.setChord(chords[i]);
+        std::cout << "Next chord fretboard: " << std::endl;
+        fretboard.printTab();
+        std::cout << "Next chord notes are: " << std::endl;
+        fretboard.chord.printChord();
+        ++i;
     }
 }
 
@@ -707,4 +738,6 @@ int main()
     ChordProgression p;
     p.setChords();
     p.printChords();
+
+    p.play();
 }
