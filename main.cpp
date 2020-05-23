@@ -187,7 +187,7 @@ char Note::getKeyByInternal(int interval)
     {
         semitone = getNextTone();
         key = semitone;
-        i++;
+        ++i;
     }
 
     return semitone;
@@ -196,7 +196,7 @@ char Note::getKeyByInternal(int interval)
 void Note::printCycle(int interval)
 {
     char semitone = 'A';
-    for (int i = 1; i <= NUM_KEYS; i++)
+    for (int i = 1; i <= NUM_KEYS; ++i)
     {
         std::cout << semitone << std::endl;
         semitone = getKeyByInternal(interval);
@@ -372,7 +372,7 @@ void GuitarString::printGuitarString()
 {
     std::cout << stringNum << " " << openStringKey << " |";
 
-    for(int fret = 1; fret <= NUM_FRETS; fret++)
+    for(int fret = 1; fret <= NUM_FRETS; ++fret)
     {
         if(fret == frettedNum)
         {
@@ -520,7 +520,7 @@ void Chord::resetChord()
 
 void Chord::printChord()
 {
-    for ( int i = 0; i < NUM_STRINGS; i++)
+    for ( int i = 0; i < NUM_STRINGS; ++i)
     {
         std::cout << notes[i].getKey() << std::endl;
     }
@@ -573,7 +573,7 @@ void Fretboard::reset()
 
 void Fretboard::setChord(Chord c)
 {
-    for (int i = 0; i < NUM_STRINGS; i++)
+    for (int i = 0; i < NUM_STRINGS; ++i)
     {
         chord.notes[i] = c.notes[i];
     }
@@ -588,15 +588,15 @@ void Fretboard::raiseOctave()
         Note note = s.note;
         int fret = note.getFretNum();
         fret += 12;
-        s.note.setFretNum(fret);
-        s.setFrettedNum(fret);
-        i++;
+        strings[i].note.setFretNum(fret);
+        strings[i].setFrettedNum(fret);
+        ++i;
     }
 }
 
 void Fretboard::printTab()
 {
-    for(int i = 0; i < NUM_STRINGS; i++)
+    for(int i = 0; i < NUM_STRINGS; ++i)
     {
         GuitarString s = strings[i];
         s.printGuitarString();
@@ -628,7 +628,7 @@ ChordProgression::~ChordProgression()
 }
 
 void ChordProgression::setChords()
-
+{
     chords[0].resetChord();
     chords[0].setNumFingers(3);
     chords[0].setNumNotes(3);
@@ -653,7 +653,7 @@ void ChordProgression::setChords()
 
 void ChordProgression::printChords()
 {
-    for (int i = 0; i < NUM_CHORDS; i++)
+    for (int i = 0; i < NUM_CHORDS; ++i)
     {
         Chord c = chords[i];
         c.printChord();
