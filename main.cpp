@@ -606,6 +606,7 @@ void Fretboard::raiseOctave()
         strings[i].setFrettedNum(fret);
         ++i;
     }
+    octave = 2;
     chord.setIsBarred();
 }
 
@@ -630,6 +631,7 @@ struct ChordProgression
     void printChords();
 
     void play();
+    void playOctave();
 };
 
 ChordProgression::ChordProgression()
@@ -691,6 +693,22 @@ void ChordProgression::play()
     }
 }
 
+void ChordProgression::playOctave()
+{
+    int i = 0;
+    while (i < NUM_CHORDS)
+    {
+        fretboard.reset();
+        fretboard.setChord(chords[i]);
+        fretboard.raiseOctave();
+        std::cout << "Next chord fretboard: " << std::endl;
+        fretboard.printTab();
+        std::cout << "Next chord notes are: " << std::endl;
+        fretboard.chord.printChord();
+        ++i;
+    }
+}
+
 int main()
 {
     std::cout << std::endl;
@@ -719,25 +737,37 @@ int main()
     f.chord.setNote(note3);
     f.strings[4].setNote(note3);
     
+    std::cout << std::endl;
     std::cout << "First chord notes are: " << std::endl;
+    std::cout << std::endl;
+
     f.chord.printChord();
 
     std::cout << std::endl;
-
     std::cout << "First chord diagram: " << std::endl;
+    std::cout << std::endl;
+
     f.printTab();
 
     std::cout << std::endl;
     std::cout << "First chord octave up: " << std::endl;
+    std::cout << std::endl;
 
     f.raiseOctave();
     f.printTab();
 
     std::cout << std::endl;
+    std::cout << "First chord octave up: " << std::endl;
+    std::cout << std::endl;
 
     ChordProgression p;
     p.setChords();
     p.printChords();
-
     p.play();
+
+    std::cout << std::endl;
+    std::cout << "Chords octave up: " << std::endl;
+    std::cout << std::endl;
+
+    p.playOctave();
 }
