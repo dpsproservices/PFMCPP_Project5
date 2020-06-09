@@ -97,6 +97,10 @@ struct Note
     void printCycle(int interval);
 
     char getTab();
+    void printKey();
+    void printFinger();
+    void printFretNum();
+    void printStringNum();
 };
 
 Note::Note()
@@ -120,7 +124,7 @@ Note::Note(int str, int fret, Finger digit, char note)
 
 Note::~Note()
 {
-    std::cout << "Note DTOR" << std::endl;
+    //std::cout << "Note DTOR" << std::endl;
 }
 
 int Note::getStringNum()
@@ -238,6 +242,26 @@ char Note::getTab()
         case none:
             return '-';
     }
+}
+
+void Note::printKey()
+{
+    std::cout << "Note key: " << this->key << std::endl;
+}
+
+void Note::printFinger()
+{
+    std::cout << "Note finger: " << this->finger << std::endl;
+}
+
+void Note::printFretNum()
+{
+    std::cout << "Note fret: " << this->fretNum << std::endl;
+}
+
+void Note::printStringNum()
+{
+    std::cout << "Note string: " << this->stringNum << std::endl;
 }
 
 struct GuitarString
@@ -470,7 +494,7 @@ Chord::Chord()
 
 Chord::~Chord()
 {
-    std::cout << "Chord DTOR" << std::endl;
+    //std::cout << "Chord DTOR" << std::endl;
 }
 
 int Chord::getNumNotes()
@@ -574,6 +598,7 @@ struct Fretboard
 
     void printTab();
     void reset();
+    void printNumNotes();
 };
 
 Fretboard::Fretboard()
@@ -595,7 +620,7 @@ Fretboard::Fretboard()
 
 Fretboard::~Fretboard()
 {
-    std::cout << "Fretboard DTOR" << std::endl;
+    //std::cout << "Fretboard DTOR" << std::endl;
 }
 
 void Fretboard::reset()
@@ -636,6 +661,11 @@ void Fretboard::printTab()
     }
 }
 
+void Fretboard::printNumNotes()
+{
+    std::cout << "Fretboard number of notes fretted: " << this->numNotesFretted << std::endl;
+}
+
 struct ChordProgression
 {
     int numChords;
@@ -650,6 +680,7 @@ struct ChordProgression
 
     void play();
     void playOctave();
+    void printNumChords();
 };
 
 ChordProgression::ChordProgression()
@@ -660,7 +691,7 @@ ChordProgression::ChordProgression()
 
 ChordProgression::~ChordProgression()
 {
-    std::cout << "ChordProgression DTOR" << std::endl;
+    //std::cout << "ChordProgression DTOR" << std::endl;
 }
 
 void ChordProgression::setChords()
@@ -727,11 +758,15 @@ void ChordProgression::playOctave()
     }
 }
 
+void ChordProgression::printNumChords()
+{
+    std::cout << "ChordProgression number of chords: " << this->numChords << std::endl;
+}
+
 int main()
 {
-    Example::main();
     std::cout << std::endl;
-    std::cout << "Fretboard Tab V 1.0" << std::endl;
+    std::cout << "Fretboard Tab V 1.1" << std::endl;
     std::cout << std::endl;
 
     Fretboard f = Fretboard();
@@ -755,38 +790,63 @@ int main()
     Note note3 = Note(5,3,ring,'C');
     f.chord.setNote(note3);
     f.strings[4].setNote(note3);
-    
+
+    std::cout << "Fretboard number of notes fretted: " << f.numNotesFretted << std::endl;
+    f.printNumNotes();
+
+    std::cout << "Note key: " <<  note1.key << std::endl;
+    note1.printKey();
+
+    std::cout << "Note string: " <<  note1.stringNum << std::endl;
+    note1.printStringNum();
+
+    std::cout << "Note fret: " <<  note1.fretNum << std::endl;
+    note1.printFretNum();
+
+    /*
     std::cout << std::endl;
     std::cout << "First chord notes are: " << std::endl;
     std::cout << std::endl;
+    */
 
-    f.chord.printChord();
+    //f.chord.printChord();
 
+    /*
     std::cout << std::endl;
     std::cout << "First chord diagram: " << std::endl;
     std::cout << std::endl;
+    */
+    
+    //f.printTab();
 
-    f.printTab();
-
+    /*
     std::cout << std::endl;
     std::cout << "First chord octave up: " << std::endl;
     std::cout << std::endl;
+    */
 
-    f.raiseOctave();
-    f.printTab();
+    //f.raiseOctave();
+    //f.printTab();
 
+    /*
     std::cout << std::endl;
     std::cout << "First chord octave up: " << std::endl;
     std::cout << std::endl;
+    */
 
     ChordProgression p;
     p.setChords();
-    p.printChords();
-    p.play();
+    //p.printChords();
+    //p.play();
 
+    /*
     std::cout << std::endl;
     std::cout << "Chords octave up: " << std::endl;
     std::cout << std::endl;
+    */
 
-    p.playOctave();
+    //p.playOctave();
+    
+    std::cout << "ChordProgression number of chords: " <<  p.numChords << std::endl;
+    p.printNumChords();
 }
