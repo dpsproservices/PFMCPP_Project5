@@ -85,7 +85,7 @@ struct Note
     void printFretNum();
     void printStringNum();
 
-    JUCE_LEAK_DETECTOR(Note);
+    JUCE_LEAK_DETECTOR(Note)
 };
 
 Note::Note()
@@ -257,7 +257,7 @@ struct NoteWrapper
         delete ptrToNote;
     }
     Note* ptrToNote = nullptr;
-    JUCE_LEAK_DETECTOR(NoteWrapper);
+    JUCE_LEAK_DETECTOR(NoteWrapper)
 };
 
 struct GuitarString
@@ -294,7 +294,7 @@ struct GuitarString
 
     void printGuitarString();
 
-    JUCE_LEAK_DETECTOR(GuitarString);
+    JUCE_LEAK_DETECTOR(GuitarString)
 };
 
 char GuitarString::getOpenString(int strNum)
@@ -431,7 +431,7 @@ struct GuitarStringWrapper
         delete ptrToGuitarString;
     }
     GuitarString* ptrToGuitarString = nullptr;
-    JUCE_LEAK_DETECTOR(GuitarStringWrapper);
+    JUCE_LEAK_DETECTOR(GuitarStringWrapper)
 };
 
 struct Chord
@@ -461,7 +461,7 @@ struct Chord
     bool getIsBarred();
     void setIsBarred();
 
-    JUCE_LEAK_DETECTOR(Chord);
+    JUCE_LEAK_DETECTOR(Chord)
 };
 
 Chord::Chord()
@@ -597,7 +597,7 @@ struct ChordWrapper
         delete ptrToChord;
     }
     Chord* ptrToChord = nullptr;
-    JUCE_LEAK_DETECTOR(ChordWrapper);
+    JUCE_LEAK_DETECTOR(ChordWrapper)
 };
 
 struct Fretboard
@@ -618,7 +618,7 @@ struct Fretboard
     void reset();
     void printNumNotes();
 
-    JUCE_LEAK_DETECTOR(Fretboard);
+    JUCE_LEAK_DETECTOR(Fretboard)
 };
 
 Fretboard::Fretboard()
@@ -695,7 +695,7 @@ struct FretboardWrapper
         delete ptrToFretboard;
     }
     Fretboard* ptrToFretboard = nullptr;
-    JUCE_LEAK_DETECTOR(FretboardWrapper);
+    JUCE_LEAK_DETECTOR(FretboardWrapper)
 };
 
 struct ChordProgression
@@ -714,7 +714,7 @@ struct ChordProgression
     void playOctave();
     void printNumChords();
 
-    JUCE_LEAK_DETECTOR(ChordProgression);
+    JUCE_LEAK_DETECTOR(ChordProgression)
 };
 
 ChordProgression::ChordProgression()
@@ -806,7 +806,7 @@ struct ChordProgressionWrapper
         delete ptrToChordProgression;
     }
     ChordProgression* ptrToChordProgression = nullptr;
-    JUCE_LEAK_DETECTOR(ChordProgressionWrapper);
+    JUCE_LEAK_DETECTOR(ChordProgressionWrapper)
 };
 
 int main()
