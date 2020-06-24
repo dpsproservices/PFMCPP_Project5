@@ -19,10 +19,13 @@ Create a branch named Part3
       
     This means if you had something like the following in your main() previously: 
 */
+
+
 #if false
  Axe axe;
  std::cout << "axe sharpness: " << axe.sharpness << "\n";
  #endif
+
  /*
     you would update that to use your wrappers:
     
@@ -41,13 +44,12 @@ You don't have to do this, you can keep your current object name and just change
  see here for an example: https://repl.it/@matkatmusic/ch3p04example
  */
 
-
-
 #define NUM_STRINGS 6
 #define NUM_FRETS 24
 #define NUM_KEYS 12
 #define NUM_CHORDS 3
 #include <iostream>
+#include "LeakedObjectDetector.h"
 
 enum Finger { thumb, index, middle, ring, pinky, none };
 
@@ -82,6 +84,8 @@ struct Note
     void printFinger();
     void printFretNum();
     void printStringNum();
+
+    JUCE_LEAK_DETECTOR(Note)
 };
 
 Note::Note()
@@ -245,6 +249,17 @@ void Note::printStringNum()
     std::cout << "Note string: " << this->stringNum << std::endl;
 }
 
+struct NoteWrapper 
+{
+    NoteWrapper( Note* notePtr ) : ptrToNote(notePtr) {}
+    ~NoteWrapper()
+    {
+        delete ptrToNote;
+    }
+    Note* ptrToNote = nullptr;
+    JUCE_LEAK_DETECTOR(NoteWrapper)
+};
+
 struct GuitarString
 {
     int stringNum;
@@ -278,6 +293,8 @@ struct GuitarString
     void setNote(Note note);
 
     void printGuitarString();
+
+    JUCE_LEAK_DETECTOR(GuitarString)
 };
 
 char GuitarString::getOpenString(int strNum)
@@ -375,11 +392,6 @@ void GuitarString::setFrettedNum(int fretNum)
     frettedNum = fretNum;
 }
 
-//Note GuitarString::getNote()
-//{
-//    return note;
-//}
-
 void GuitarString::setNote(Note n)
 {
     note.setStringNum(n.getStringNum());
@@ -410,6 +422,17 @@ void GuitarString::printGuitarString()
     std::cout << std::endl;
 }
 
+struct GuitarStringWrapper 
+{
+    GuitarStringWrapper( GuitarString* guitarStringPtr ) : ptrToGuitarString(guitarStringPtr) {}
+
+    ~GuitarStringWrapper()
+    {
+        delete ptrToGuitarString;
+    }
+    GuitarString* ptrToGuitarString = nullptr;
+    JUCE_LEAK_DETECTOR(GuitarStringWrapper)
+};
 
 struct Chord
 {
@@ -437,6 +460,8 @@ struct Chord
 
     bool getIsBarred();
     void setIsBarred();
+
+    JUCE_LEAK_DETECTOR(Chord)
 };
 
 Chord::Chord()
@@ -563,6 +588,18 @@ void Chord::setIsBarred()
     isBarred = !isBarred;
 }
 
+struct ChordWrapper 
+{
+    ChordWrapper( Chord* chordPtr ) : ptrToChord(chordPtr) {}
+
+    ~ChordWrapper()
+    {
+        delete ptrToChord;
+    }
+    Chord* ptrToChord = nullptr;
+    JUCE_LEAK_DETECTOR(ChordWrapper)
+};
+
 struct Fretboard
 {   
     int numNotesFretted;
@@ -580,6 +617,8 @@ struct Fretboard
     void printTab();
     void reset();
     void printNumNotes();
+
+    JUCE_LEAK_DETECTOR(Fretboard)
 };
 
 Fretboard::Fretboard()
@@ -647,6 +686,18 @@ void Fretboard::printNumNotes()
     std::cout << "Fretboard number of notes fretted: " << this->numNotesFretted << std::endl;
 }
 
+struct FretboardWrapper 
+{
+    FretboardWrapper( Fretboard* fretboardPtr ) : ptrToFretboard(fretboardPtr) {}
+
+    ~FretboardWrapper()
+    {
+        delete ptrToFretboard;
+    }
+    Fretboard* ptrToFretboard = nullptr;
+    JUCE_LEAK_DETECTOR(FretboardWrapper)
+};
+
 struct ChordProgression
 {
     int numChords;
@@ -662,6 +713,8 @@ struct ChordProgression
     void play();
     void playOctave();
     void printNumChords();
+
+    JUCE_LEAK_DETECTOR(ChordProgression)
 };
 
 ChordProgression::ChordProgression()
@@ -744,36 +797,49 @@ void ChordProgression::printNumChords()
     std::cout << "ChordProgression number of chords: " << this->numChords << std::endl;
 }
 
+struct ChordProgressionWrapper 
+{
+    ChordProgressionWrapper( ChordProgression* chordProgressionPtr ) : ptrToChordProgression(chordProgressionPtr) {}
+
+    ~ChordProgressionWrapper()
+    {
+        delete ptrToChordProgression;
+    }
+    ChordProgression* ptrToChordProgression = nullptr;
+    JUCE_LEAK_DETECTOR(ChordProgressionWrapper)
+};
+
 int main()
 {
     std::cout << std::endl;
     std::cout << "Fretboard Tab V 1.1" << std::endl;
     std::cout << std::endl;
 
-    Fretboard f = Fretboard();
-    f.reset();
-    f.printTab();
+    //Fretboard f = Fretboard();
+    FretboardWrapper fretboardWrapper( new Fretboard() );
+    fretboardWrapper.ptrToFretboard->reset();
+    fretboardWrapper.ptrToFretboard->printTab();
 
     std::cout << std::endl;
 
     // play a chord
-    f.chord.setNumFingers(3);
-    f.chord.setNumNotes(3);
+    fretboardWrapper.ptrToFretboard->chord.setNumFingers(3);
+    fretboardWrapper.ptrToFretboard->chord.setNumNotes(3);
     
     Note note1 = Note(2,1,index,'C');
-    f.chord.setNote(note1);
-    f.strings[1].setNote(note1);
+    fretboardWrapper.ptrToFretboard->chord.setNote(note1);
+    fretboardWrapper.ptrToFretboard->strings[1].setNote(note1);
 
     Note note2 = Note(4,2,middle,'E');
-    f.chord.setNote(note2);
-    f.strings[3].setNote(note2);
+    fretboardWrapper.ptrToFretboard->chord.setNote(note2);
+    fretboardWrapper.ptrToFretboard->strings[3].setNote(note2);
 
     Note note3 = Note(5,3,ring,'C');
-    f.chord.setNote(note3);
-    f.strings[4].setNote(note3);
+    fretboardWrapper.ptrToFretboard->chord.setNote(note3);
+    fretboardWrapper.ptrToFretboard->strings[4].setNote(note3);
 
-    std::cout << "Fretboard number of notes fretted: " << f.numNotesFretted << std::endl;
-    f.printNumNotes();
+    std::cout << "Fretboard number of notes fretted: " << fretboardWrapper.ptrToFretboard->numNotesFretted << std::endl;
+    fretboardWrapper.ptrToFretboard->printNumNotes();
 
     std::cout << "Note key: " <<  note1.key << std::endl;
     note1.printKey();
@@ -815,8 +881,13 @@ int main()
     std::cout << std::endl;
     */
 
+    //ChordProgression p;
+    //p.setChords();
+
     ChordProgression p;
-    p.setChords();
+    ChordProgressionWrapper chordProgressionWrapper( new ChordProgression() );
+    chordProgressionWrapper.ptrToChordProgression->setChords();
+
     //p.printChords();
     //p.play();
 
@@ -828,6 +899,7 @@ int main()
 
     //p.playOctave();
     
-    std::cout << "ChordProgression number of chords: " <<  p.numChords << std::endl;
-    p.printNumChords();
+    std::cout << "ChordProgression number of chords: " <<  chordProgressionWrapper.ptrToChordProgression->numChords << std::endl;
+    
+    chordProgressionWrapper.ptrToChordProgression->printNumChords();
 }
