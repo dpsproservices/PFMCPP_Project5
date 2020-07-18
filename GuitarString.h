@@ -7,7 +7,6 @@
 #include "LeakedObjectDetector.h"
 #include "Defines.h"
 #include "Note.h"
-#include "GuitarString.h"
 
 struct GuitarString
 {
@@ -23,6 +22,8 @@ struct GuitarString
     GuitarString();
     GuitarString(int stringNum);
     ~GuitarString();
+
+    void initializeString(int strNum);
 
     int getStringNum();
     void setStringNum(int stringNum);

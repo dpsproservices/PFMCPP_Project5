@@ -4,12 +4,10 @@
     structure to encapsulate a guitar fretboard
 ******************************************************************/
 #pragma once
-#include <iostream>
 #include "LeakedObjectDetector.h"
 #include "Defines.h"
 #include "GuitarString.h"
 #include "Chord.h"
-#include "Fretboard.h"
 
 struct Fretboard
 {   

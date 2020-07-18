@@ -6,6 +6,37 @@
 
 #include "GuitarString.h"
 
+GuitarString::GuitarString()
+{
+    //std::cout << "GuitarString default CTOR" << std::endl;
+    initializeString(1);
+}
+
+GuitarString::GuitarString(int strNum)
+{
+    //std::cout << "GuitarString CTOR" << std::endl;
+    initializeString(strNum);
+}
+
+GuitarString::~GuitarString()
+{
+    //std::cout << "GuitarString DTOR" << std::endl;
+}
+
+void GuitarString::initializeString(int strNum)
+{
+    numFrets = NUM_FRETS;
+    stringNum = strNum;
+    openStringKey = getOpenString(strNum);
+    frettedKey = openStringKey;
+    frettedNum = 0;
+
+    note.setStringNum(strNum);
+    note.setFretNum(frettedNum);
+    note.setFinger(none);
+    note.setKey(openStringKey);
+}
+
 char GuitarString::getOpenString(int strNum)
 {
     switch (strNum)
@@ -25,40 +56,6 @@ char GuitarString::getOpenString(int strNum)
         default:
             return 'E';
     }
-}
-
-GuitarString::GuitarString()
-{
-    //std::cout << "GuitarString default CTOR" << std::endl;
-    numFrets = NUM_FRETS;
-    stringNum = 1;
-    openStringKey = 'E';
-    frettedKey = 'E';
-    frettedNum = 0;
-    note.setStringNum(1);
-    note.setFretNum(frettedNum);
-    note.setFinger(none);
-    note.setKey('E');
-}
-
-GuitarString::GuitarString(int strNum)
-{
-    //std::cout << "GuitarString CTOR" << std::endl;
-    numFrets = NUM_FRETS;
-    stringNum = strNum;
-    openStringKey = getOpenString(strNum);
-    frettedKey = openStringKey;
-    frettedNum = 0;
-
-    note.setStringNum(strNum);
-    note.setFretNum(frettedNum);
-    note.setFinger(none);
-    note.setKey(openStringKey);
-}
-
-GuitarString::~GuitarString()
-{
-    //std::cout << "GuitarString DTOR" << std::endl;
 }
 
 int GuitarString::getStringNum()

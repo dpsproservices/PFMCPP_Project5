@@ -67,18 +67,8 @@ void ChordProgression::play()
 
 void ChordProgression::playOctave()
 {
-    int i = 0;
-    while (i < NUM_CHORDS)
-    {
-        fretboard.reset();
-        fretboard.setChord(chords[i]);
-        fretboard.raiseOctave();
-        std::cout << "Next chord fretboard: " << std::endl;
-        fretboard.printTab();
-        std::cout << "Next chord notes are: " << std::endl;
-        fretboard.chord.printChord();
-        ++i;
-    }
+    fretboard.raiseOctave();
+    play();
 }
 
 void ChordProgression::printNumChords()

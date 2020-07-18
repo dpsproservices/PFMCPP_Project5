@@ -4,7 +4,6 @@
     structure to encapsulate a chord progression across the guitar fretboard
 ******************************************************************/
 #pragma once
-#include <iostream>
 #include "LeakedObjectDetector.h"
 #include "Defines.h"
 #include "Chord.h"

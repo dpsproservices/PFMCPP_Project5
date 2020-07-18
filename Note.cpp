@@ -6,23 +6,15 @@
 
 #include "Note.h"
 
-Note::Note()
+Note::Note(int str, int fret, Finger digit, char note) : stringNum(str), fretNum(fret), finger(digit), key(note)
 {
-    stringNum = 1;
-    fretNum = 0;
-    finger = none;
-    //std::cout << "Note default CTOR" << std::endl; 
+    //std::cout << "Note CTOR" << std::endl;
 }
 
-Note::Note(int str, int fret, Finger digit, char note)
+Note::Note()
 {
-    stringNum = str;
-    fretNum = fret;
-    finger = digit;
-
-    key = note;
-
-    //std::cout << "Note CTOR" << std::endl;
+    Note(1,0,none,'E');
+    //std::cout << "Note default CTOR" << std::endl; 
 }
 
 Note::~Note()
@@ -95,11 +87,9 @@ char Note::getNextTone()
 
 char Note::getKeyByInternal(int interval)
 {
-    char semitone = key;
-
     if(interval == 0)
     {
-        return semitone;
+        return key;
     }
 
     if(interval < 0)
@@ -110,12 +100,11 @@ char Note::getKeyByInternal(int interval)
     int i = 0;
     while(i < interval)
     {
-        semitone = getNextTone();
-        key = semitone;
+        key = getNextTone();
         ++i;
     }
 
-    return semitone;
+    return key;
 }
 
 void Note::printCycle(int interval)

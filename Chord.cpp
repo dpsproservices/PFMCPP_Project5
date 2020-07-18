@@ -9,35 +9,7 @@
 Chord::Chord()
 {
     //std::cout << "Chord CTOR" << std::endl;
-    notes[0].setStringNum(1); 
-    notes[0].setFretNum(0);
-    notes[0].setFinger(none);
-    notes[0].setKey('E');
-
-    notes[1].setStringNum(2); 
-    notes[1].setFretNum(0);
-    notes[1].setFinger(none);
-    notes[1].setKey('B');
-
-    notes[2].setStringNum(3); 
-    notes[2].setFretNum(0);
-    notes[2].setFinger(none);
-    notes[2].setKey('G');
-
-    notes[3].setStringNum(4); 
-    notes[3].setFretNum(0);
-    notes[3].setFinger(none);
-    notes[3].setKey('D');
-
-    notes[4].setStringNum(5); 
-    notes[4].setFretNum(0);
-    notes[4].setFinger(none);
-    notes[4].setKey('A');
-
-    notes[5].setStringNum(6); 
-    notes[5].setFretNum(0);
-    notes[5].setFinger(none);
-    notes[5].setKey('E');
+    resetChord();
 }
 
 Chord::~Chord()
