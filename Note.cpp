@@ -11,9 +11,8 @@ Note::Note(int str, int fret, Finger digit, char note) : stringNum(str), fretNum
     //std::cout << "Note CTOR" << std::endl;
 }
 
-Note::Note()
+Note::Note() : Note(1,0,none,'E') 
 {
-    Note(1,0,none,'E');
     //std::cout << "Note default CTOR" << std::endl; 
 }
 
